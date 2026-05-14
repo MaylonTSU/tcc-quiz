@@ -54,98 +54,89 @@ export const CriarQuizModal = ({ onClose, onCreated }: CriarQuizModalProps) => {
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        <h2 className="mb-4 text-xl font-bold text-gray-800">Novo Quiz</h2>
+  const labelStyle = { display: 'block', marginBottom: 6, fontSize: 13, color: '#A5B4FC' } as const
+  const inputStyle = { letterSpacing: 'normal', fontFamily: 'inherit' } as const
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.7)', padding: '1rem' }}>
+      <div style={{ width: '100%', maxWidth: 440, background: '#1E1B4B', border: '0.5px solid #4F46E5', borderRadius: 16, padding: '1.75rem' }}>
+        <h2 style={{ fontSize: 17, fontWeight: 700, color: '#E0E7FF', marginBottom: '1.25rem' }}>Novo Quiz</h2>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Título
-            </label>
+            <label style={labelStyle}>Título</label>
             <input
               type="text"
               required
               value={form.titulo}
-              onChange={e => setForm(prev => ({ ...prev, titulo: e.target.value }))}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setForm((prev) => ({ ...prev, titulo: e.target.value }))}
+              className="gq-input"
+              style={inputStyle}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Disciplina
-            </label>
+            <label style={labelStyle}>Disciplina</label>
             <select
               required
               value={form.disciplina_id}
-              onChange={e => setForm(prev => ({ ...prev, disciplina_id: e.target.value }))}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setForm((prev) => ({ ...prev, disciplina_id: e.target.value }))}
+              className="gq-input"
+              style={inputStyle}
             >
               <option value="">Selecione...</option>
-              {disciplinas.map(d => (
+              {disciplinas.map((d) => (
                 <option key={d.id} value={d.id}>{d.nome}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Tempo por questão (segundos)
-            </label>
+            <label style={labelStyle}>Tempo por questão (segundos)</label>
             <input
               type="number"
               min={10}
               max={120}
               required
               value={form.tempo_limite_segundos}
-              onChange={e =>
-                setForm(prev => ({ ...prev, tempo_limite_segundos: Number(e.target.value) }))
-              }
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setForm((prev) => ({ ...prev, tempo_limite_segundos: Number(e.target.value) }))}
+              className="gq-input"
+              style={inputStyle}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Código de acesso
-            </label>
-            <div className="flex gap-2">
+            <label style={labelStyle}>Código de acesso</label>
+            <div style={{ display: 'flex', gap: 8 }}>
               <input
                 type="text"
                 required
                 value={form.codigo_acesso}
-                onChange={e =>
-                  setForm(prev => ({ ...prev, codigo_acesso: e.target.value.toUpperCase() }))
-                }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setForm((prev) => ({ ...prev, codigo_acesso: e.target.value.toUpperCase() }))}
+                className="gq-input"
               />
               <button
                 type="button"
-                onClick={() => setForm(prev => ({ ...prev, codigo_acesso: gerarCodigoAleatorio() }))}
-                className="whitespace-nowrap rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100"
+                onClick={() => setForm((prev) => ({ ...prev, codigo_acesso: gerarCodigoAleatorio() }))}
+                className="gq-btn-ghost"
+                style={{ whiteSpace: 'nowrap', padding: '8px 14px' }}
               >
                 Gerar
               </button>
             </div>
           </div>
 
-          {erro && <p className="text-sm text-red-600">{erro}</p>}
+          {erro && (
+            <div style={{ background: '#7F1D1D', color: '#F87171', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
+              {erro}
+            </div>
+          )}
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100"
-            >
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, paddingTop: 4 }}>
+            <button type="button" onClick={onClose} className="gq-btn-ghost" style={{ padding: '8px 18px' }}>
               Cancelar
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
-            >
+            <button type="submit" disabled={loading} className="gq-btn-amber" style={{ padding: '8px 18px' }}>
               {loading ? 'Criando...' : 'Criar Quiz'}
             </button>
           </div>

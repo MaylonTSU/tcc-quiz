@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getTentativaById, type Tentativa } from '@/services/quizService'
+import { Logo } from '@/components/Logo'
 
 export const ResultadoQuiz = () => {
   const { tentativaId } = useParams<{ tentativaId: string }>()
@@ -19,8 +20,8 @@ export const ResultadoQuiz = () => {
 
   if (loading) {
     return (
-      <main className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500">Carregando resultado...</p>
+      <main style={{ minHeight: '100vh', background: '#0F0E2A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#6366F1' }}>Carregando resultado...</p>
       </main>
     )
   }
@@ -32,38 +33,49 @@ export const ResultadoQuiz = () => {
   const aprovado = percentual >= 70
 
   return (
-    <main className="min-h-screen w-full px-4 sm:px-6 lg:px-8 bg-gray-50 flex items-center justify-center">
-      <div className="mx-auto w-full max-w-sm">
-        <div className="rounded-2xl bg-white p-8 shadow text-center">
-          <div className={`mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full text-3xl font-bold ${aprovado ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
-            {pontuacao}
+    <main style={{ minHeight: '100vh', background: '#0F0E2A', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+      <div style={{ width: '100%', maxWidth: 360 }}>
+        <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 16, padding: '2.5rem', textAlign: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+            <Logo />
           </div>
 
-          <h1 className="text-xl font-bold text-gray-800 mb-1">
-            {aprovado ? 'Parabéns!' : 'Continue praticando!'}
+          {/* Círculo de pontuação */}
+          <div style={{
+            width: 96, height: 96, borderRadius: '50%',
+            border: '3px solid #F59E0B',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 1.25rem',
+            background: '#0F0E2A',
+          }}>
+            <span style={{ fontSize: 26, fontWeight: 800, color: '#F59E0B' }}>{pontuacao}</span>
+          </div>
+
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: '#E0E7FF', marginBottom: 6 }}>
+            {aprovado ? 'Parabéns! 🎉' : 'Continue praticando!'}
           </h1>
-          <p className="text-sm text-gray-500 mb-6">
+          <p style={{ fontSize: 13, color: '#6366F1', marginBottom: '1.5rem' }}>
             {aprovado
               ? 'Excelente desempenho neste quiz.'
               : 'Você está evoluindo. Tente novamente!'}
           </p>
 
-          <div className="rounded-xl bg-gray-50 p-4 mb-6 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Pontuação</span>
-              <span className="font-semibold text-gray-800">{pontuacao} pts</span>
+          {/* Stats */}
+          <div style={{ background: '#0F0E2A', borderRadius: 10, padding: '1rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+              <span style={{ color: '#6366F1' }}>Pontuação</span>
+              <span style={{ fontWeight: 700, color: '#F59E0B' }}>{pontuacao} pts</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Aproveitamento</span>
-              <span className={`font-semibold ${aprovado ? 'text-green-600' : 'text-orange-600'}`}>
-                {percentual}%
-              </span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+              <span style={{ color: '#6366F1' }}>Aproveitamento</span>
+              <span style={{ fontWeight: 700, color: aprovado ? '#4ADE80' : '#F87171' }}>{percentual}%</span>
             </div>
           </div>
 
           <button
             onClick={() => navigate('/aluno/dashboard')}
-            className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
+            className="gq-btn-primary"
+            style={{ width: '100%' }}
           >
             Voltar ao início
           </button>

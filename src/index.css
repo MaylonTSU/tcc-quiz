@@ -1,1 +1,99 @@
 @import "tailwindcss";
+
+/* ── GameQuiz dark theme ─────────────────────────────── */
+
+body {
+  background: #0F0E2A;
+  color: #E0E7FF;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1E1B4B; }
+::-webkit-scrollbar-thumb { background: #4F46E5; border-radius: 3px; }
+
+.gq-card {
+  background: #1E1B4B;
+  border: 0.5px solid #312E81;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.gq-btn-primary {
+  background: #4F46E5;
+  color: #E0E7FF;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+.gq-btn-primary:hover:not(:disabled) { background: #4338CA; }
+.gq-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.gq-btn-amber {
+  background: #F59E0B;
+  color: #1E1B4B;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+.gq-btn-amber:hover:not(:disabled) { background: #D97706; }
+.gq-btn-amber:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.gq-btn-ghost {
+  background: transparent;
+  color: #A5B4FC;
+  border: 0.5px solid #312E81;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+.gq-btn-ghost:hover { background: #1E1B4B; }
+
+.gq-input {
+  background: #0F0E2A;
+  border: 0.5px solid #4F46E5;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #E0E7FF;
+  font-family: monospace;
+  letter-spacing: 2px;
+  width: 100%;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.gq-input:focus {
+  border-color: #818CF8;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+}
+.gq-input::placeholder { color: #6366F1; letter-spacing: 1px; }
+.gq-input option { background: #1E1B4B; color: #E0E7FF; letter-spacing: normal; }
+
+.gq-badge-success {
+  background: #14532D;
+  color: #4ADE80;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.gq-badge-warning {
+  background: #78350F;
+  color: #FCD34D;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+}

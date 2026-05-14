@@ -10,6 +10,7 @@ import {
 import type { Quiz } from '@/services/quizService'
 import { QuizCard } from '@/components/QuizCard'
 import { CriarQuizModal } from '@/components/CriarQuizModal'
+import { Logo } from '@/components/Logo'
 
 export const DashboardProfessor = () => {
   const { profile, signOut } = useAuth()
@@ -33,37 +34,33 @@ export const DashboardProfessor = () => {
     new Date(dateStr).toLocaleDateString('pt-BR')
 
   return (
-    <main className="min-h-screen w-full px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="mx-auto w-full max-w-6xl py-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
-              Olá, {primeiroNome}!
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">Painel do professor</p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowModal(true)}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-            >
-              Novo Quiz
-            </button>
-            <button
-              onClick={signOut}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100"
-            >
-              Sair
-            </button>
-          </div>
+    <div style={{ minHeight: '100vh', background: '#0F0E2A' }}>
+      {/* Header */}
+      <header style={{ background: '#1E1B4B', borderBottom: '0.5px solid #312E81', padding: '0.875rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <Logo />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 13, color: '#A5B4FC' }}>Olá, {primeiroNome}</span>
+          <button
+            onClick={() => setShowModal(true)}
+            className="gq-btn-primary"
+            style={{ padding: '6px 14px', fontSize: 13 }}
+          >
+            + Novo Quiz
+          </button>
+          <button onClick={signOut} className="gq-btn-ghost" style={{ padding: '6px 14px', fontSize: 13 }}>
+            Sair
+          </button>
         </div>
+      </header>
 
+      <main style={{ maxWidth: 1024, margin: '0 auto', padding: '2rem 1rem' }}>
+        {/* Quiz grid */}
         {quizzes.length === 0 ? (
-          <div className="rounded-2xl bg-white p-6 shadow text-center text-gray-400 mb-6">
-            Nenhum quiz criado ainda. Clique em "Novo Quiz" para começar.
+          <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6366F1', fontSize: 14, marginBottom: '1.5rem' }}>
+            Nenhum quiz criado ainda. Clique em "+ Novo Quiz" para começar.
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14, marginBottom: '1.5rem' }}>
             {quizzes.map((quiz) => (
               <QuizCard
                 key={quiz.id}
@@ -74,37 +71,37 @@ export const DashboardProfessor = () => {
           </div>
         )}
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-gray-700">Tentativas recentes</h2>
+        {/* Tentativas recentes */}
+        <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#A5B4FC' }}>Tentativas recentes</p>
             <button
               onClick={() => navigate('/ranking')}
-              className="text-sm text-indigo-600 hover:underline"
+              style={{ fontSize: 13, color: '#F59E0B', background: 'none', border: 'none', cursor: 'pointer' }}
             >
               Ver ranking completo
             </button>
           </div>
 
           {tentativas.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">Nenhuma tentativa registrada.</p>
+            <p style={{ fontSize: 13, color: '#6366F1', textAlign: 'center', padding: '1rem 0' }}>Nenhuma tentativa registrada.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr className="text-left text-xs text-gray-400 border-b border-gray-100">
-                    <th className="pb-2 font-medium">Aluno</th>
-                    <th className="pb-2 font-medium">Quiz</th>
-                    <th className="pb-2 font-medium text-right">Pontos</th>
-                    <th className="pb-2 font-medium text-right">Data</th>
+                  <tr style={{ borderBottom: '0.5px solid #312E81' }}>
+                    {['Aluno', 'Quiz', 'Pontos', 'Data'].map((h) => (
+                      <th key={h} style={{ padding: '6px 8px', color: '#6366F1', fontWeight: 500, textAlign: h === 'Pontos' || h === 'Data' ? 'right' : 'left', fontSize: 11 }}>{h}</th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody>
                   {tentativas.map((t) => (
-                    <tr key={t.id}>
-                      <td className="py-2 text-gray-800">{t.profiles?.nome_completo ?? '—'}</td>
-                      <td className="py-2 text-gray-600 truncate max-w-[180px]">{t.quizzes?.titulo ?? '—'}</td>
-                      <td className="py-2 text-right font-semibold text-indigo-600">{t.pontuacao_total}</td>
-                      <td className="py-2 text-right text-gray-400">{formatarData(t.created_at)}</td>
+                    <tr key={t.id} style={{ borderBottom: '0.5px solid #1E1B4B' }}>
+                      <td style={{ padding: '8px', color: '#E0E7FF' }}>{t.profiles?.nome_completo ?? '—'}</td>
+                      <td style={{ padding: '8px', color: '#A5B4FC', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.quizzes?.titulo ?? '—'}</td>
+                      <td style={{ padding: '8px', textAlign: 'right', fontWeight: 700, color: '#F59E0B' }}>{t.pontuacao_total}</td>
+                      <td style={{ padding: '8px', textAlign: 'right', color: '#6366F1' }}>{formatarData(t.created_at)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -112,17 +109,14 @@ export const DashboardProfessor = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
 
       {showModal && (
         <CriarQuizModal
           onClose={() => setShowModal(false)}
-          onCreated={() => {
-            setShowModal(false)
-            carregarQuizzes()
-          }}
+          onCreated={() => { setShowModal(false); carregarQuizzes() }}
         />
       )}
-    </main>
+    </div>
   )
 }

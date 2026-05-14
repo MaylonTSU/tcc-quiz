@@ -13,42 +13,55 @@ export const QuizCard = ({ quiz, onToggleAtivo }: QuizCardProps) => {
   const totalQuestoes = quiz.quiz_questoes?.length ?? quiz.quantidade_questoes
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow">
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="font-semibold leading-snug text-gray-800">{quiz.titulo}</h3>
-        <span
-          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-            quiz.ativo
-              ? 'bg-green-100 text-green-700'
-              : 'bg-gray-100 text-gray-500'
-          }`}
-        >
+    <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#E0E7FF', lineHeight: 1.4 }}>{quiz.titulo}</h3>
+        <span style={{
+          flexShrink: 0,
+          background: quiz.ativo ? '#14532D' : '#312E81',
+          color: quiz.ativo ? '#4ADE80' : '#6366F1',
+          borderRadius: 20,
+          padding: '2px 10px',
+          fontSize: 11,
+          fontWeight: 500,
+        }}>
           {quiz.ativo ? 'Ativo' : 'Inativo'}
         </span>
       </div>
 
-      <dl className="space-y-1 text-sm text-gray-600">
-        <div className="flex justify-between">
-          <dt>Disciplina</dt>
-          <dd className="font-medium text-gray-800">{nomeDisciplina}</dd>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {[
+          { label: 'Disciplina', value: nomeDisciplina },
+          { label: 'Questões', value: String(totalQuestoes) },
+        ].map((item) => (
+          <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+            <span style={{ color: '#6366F1' }}>{item.label}</span>
+            <span style={{ color: '#A5B4FC', fontWeight: 500 }}>{item.value}</span>
+          </div>
+        ))}
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+          <span style={{ color: '#6366F1' }}>Código</span>
+          <span style={{ background: '#0F0E2A', color: '#F59E0B', fontFamily: 'monospace', fontWeight: 600, padding: '1px 8px', borderRadius: 4, letterSpacing: 1 }}>
+            {quiz.codigo_acesso}
+          </span>
         </div>
-        <div className="flex justify-between">
-          <dt>Questões</dt>
-          <dd className="font-medium text-gray-800">{totalQuestoes}</dd>
-        </div>
-        <div className="flex justify-between">
-          <dt>Código</dt>
-          <dd className="font-mono font-medium text-gray-800">{quiz.codigo_acesso}</dd>
-        </div>
-      </dl>
+      </div>
 
       <button
         onClick={() => onToggleAtivo()}
-        className={`mt-auto w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-          quiz.ativo
-            ? 'border border-gray-300 text-gray-600 hover:bg-gray-100'
-            : 'bg-blue-600 text-white hover:bg-blue-700'
-        }`}
+        style={{
+          marginTop: 'auto',
+          width: '100%',
+          borderRadius: 8,
+          padding: '8px',
+          fontSize: 13,
+          fontWeight: 500,
+          cursor: 'pointer',
+          border: 'none',
+          transition: 'opacity 0.2s',
+          background: quiz.ativo ? '#312E81' : '#4F46E5',
+          color: quiz.ativo ? '#F87171' : '#E0E7FF',
+        }}
       >
         {quiz.ativo ? 'Desativar' : 'Ativar'}
       </button>

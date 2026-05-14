@@ -2,16 +2,26 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/useAuth'
 import { getTentativasByAluno, type TentativaComQuiz } from '@/services/quizService'
+import { getStatsAluno } from '@/services/rankingService'
+import { Logo } from '@/components/Logo'
+
+interface Stats {
+  pontuacao_total: number
+  quizzes_respondidos: number
+  posicao: number
+}
 
 export const DashboardAluno = () => {
   const { user, profile, signOut } = useAuth()
   const navigate = useNavigate()
   const [codigo, setCodigo] = useState('')
   const [tentativas, setTentativas] = useState<TentativaComQuiz[]>([])
+  const [stats, setStats] = useState<Stats>({ pontuacao_total: 0, quizzes_respondidos: 0, posicao: 0 })
 
   useEffect(() => {
     if (!user) return
     getTentativasByAluno(user.id, 5).then(setTentativas).catch(() => {})
+    getStatsAluno(user.id).then(setStats).catch(() => {})
   }, [user])
 
   const handleEntrarQuiz = (e: React.FormEvent) => {
@@ -25,70 +35,84 @@ export const DashboardAluno = () => {
     new Date(dateStr).toLocaleDateString('pt-BR')
 
   return (
-    <main className="min-h-screen w-full px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="mx-auto w-full max-w-6xl py-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
-              Olá, {profile?.nome_completo}!
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">Painel do aluno</p>
-          </div>
-          <button
-            onClick={signOut}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
-          >
+    <div style={{ minHeight: '100vh', background: '#0F0E2A' }}>
+      {/* Header */}
+      <header style={{ background: '#1E1B4B', borderBottom: '0.5px solid #312E81', padding: '0.875rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Logo />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 13, color: '#A5B4FC' }}>{profile?.nome_completo}</span>
+          <button onClick={signOut} className="gq-btn-ghost" style={{ padding: '6px 14px', fontSize: 13 }}>
             Sair
           </button>
         </div>
+      </header>
 
-        <div className="rounded-2xl bg-white p-6 shadow mb-6">
-          <h2 className="text-base font-semibold text-gray-700 mb-3">Entrar em um quiz</h2>
-          <form onSubmit={handleEntrarQuiz} className="flex flex-col sm:flex-row gap-3">
+      <main style={{ maxWidth: 800, margin: '0 auto', padding: '2rem 1rem' }}>
+        {/* Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: '1.5rem' }}>
+          {[
+            { label: 'Pontuação', value: stats.pontuacao_total, suffix: 'pts', color: '#F59E0B' },
+            { label: 'Quizzes', value: stats.quizzes_respondidos, suffix: '', color: '#A5B4FC' },
+            { label: 'Posição', value: stats.posicao > 0 ? `${stats.posicao}º` : '—', suffix: '', color: '#4ADE80' },
+          ].map((s) => (
+            <div key={s.label} style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '1rem', textAlign: 'center' }}>
+              <p style={{ fontSize: 22, fontWeight: 700, color: s.color }}>{s.value}{s.suffix}</p>
+              <p style={{ fontSize: 12, color: '#6366F1', marginTop: 2 }}>{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Entrar no quiz */}
+        <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '1.25rem', marginBottom: '1.5rem' }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#A5B4FC', marginBottom: 12 }}>Entrar em um quiz</p>
+          <form onSubmit={handleEntrarQuiz} style={{ display: 'flex', gap: 10 }}>
             <input
               type="text"
               value={codigo}
               onChange={(e) => setCodigo(e.target.value.toUpperCase())}
-              placeholder="Código de acesso"
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-mono uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="CÓDIGO"
+              className="gq-input"
               maxLength={10}
+              style={{ flex: 1 }}
             />
             <button
               type="submit"
               disabled={!codigo.trim()}
-              className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="gq-btn-amber"
+              style={{ whiteSpace: 'nowrap' }}
             >
-              Entrar no Quiz
+              Entrar
             </button>
           </form>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-gray-700">Minhas tentativas</h2>
+        {/* Minhas tentativas */}
+        <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#A5B4FC' }}>Minhas tentativas</p>
             <button
               onClick={() => navigate('/ranking')}
-              className="text-sm text-indigo-600 hover:underline"
+              style={{ fontSize: 13, color: '#F59E0B', background: 'none', border: 'none', cursor: 'pointer' }}
             >
               Ver ranking
             </button>
           </div>
 
           {tentativas.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">Nenhuma tentativa ainda.</p>
+            <p style={{ fontSize: 13, color: '#6366F1', textAlign: 'center', padding: '1rem 0' }}>Nenhuma tentativa ainda.</p>
           ) : (
-            <div className="space-y-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {tentativas.map((t) => {
                 const aprovado = t.pontuacao_total >= 70
                 return (
-                  <div key={t.id} className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3">
+                  <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#0F0E2A', borderRadius: 8, padding: '10px 14px' }}>
                     <div>
-                      <p className="text-sm font-medium text-gray-800">{t.quizzes?.titulo ?? '—'}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{formatarData(t.created_at)}</p>
+                      <p style={{ fontSize: 13, fontWeight: 500, color: '#E0E7FF' }}>{t.quizzes?.titulo ?? '—'}</p>
+                      <p style={{ fontSize: 11, color: '#6366F1', marginTop: 2 }}>{formatarData(t.created_at)}</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-bold text-gray-700">{t.pontuacao_total} pts</span>
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${aprovado ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: '#F59E0B' }}>{t.pontuacao_total} pts</span>
+                      <span className={aprovado ? 'gq-badge-success' : 'gq-badge-warning'}>
                         {aprovado ? 'Aprovado' : 'Abaixo da média'}
                       </span>
                     </div>
@@ -98,7 +122,7 @@ export const DashboardAluno = () => {
             </div>
           )}
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   )
 }

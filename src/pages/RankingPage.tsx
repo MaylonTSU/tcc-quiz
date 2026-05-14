@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/useAuth'
 import { supabase } from '@/services/supabase'
 import { getRanking, getRankingCompleto, type RankingComNome } from '@/services/rankingService'
+import { Logo } from '@/components/Logo'
 
 export const RankingPage = () => {
   const { user, profile } = useAuth()
@@ -32,22 +33,17 @@ export const RankingPage = () => {
       } else {
         setRanking(await getRankingCompleto())
       }
-    } catch {
-      // silent
-    } finally {
-      setLoading(false)
-    }
+    } catch { /* silent */ }
+    finally { setLoading(false) }
   }, [isAluno, userId])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     carregar()
-
     const channel = supabase
       .channel('ranking-realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'ranking' }, carregar)
       .subscribe()
-
     return () => { supabase.removeChannel(channel) }
   }, [carregar])
 
@@ -59,51 +55,60 @@ export const RankingPage = () => {
   }
 
   return (
-    <main className="min-h-screen w-full px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="mx-auto w-full max-w-2xl py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Ranking</h1>
-          <button
-            onClick={() => navigate(dashPath)}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
-          >
+    <div style={{ minHeight: '100vh', background: '#0F0E2A' }}>
+      {/* Header */}
+      <header style={{ background: '#1E1B4B', borderBottom: '0.5px solid #312E81', padding: '0.875rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Logo />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 15, fontWeight: 600, color: '#E0E7FF' }}>Ranking</span>
+          <button onClick={() => navigate(dashPath)} className="gq-btn-ghost" style={{ padding: '6px 14px', fontSize: 13 }}>
             Voltar
           </button>
         </div>
+      </header>
 
+      <main style={{ maxWidth: 600, margin: '0 auto', padding: '2rem 1rem' }}>
         {!isAluno && ranking.length > 0 && (
-          <p className="text-sm text-gray-500 mb-4">{ranking.length} participantes</p>
+          <p style={{ fontSize: 12, color: '#6366F1', marginBottom: 12 }}>{ranking.length} participantes</p>
         )}
 
         {posicaoPropria && (
-          <div className="rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 mb-4 text-sm text-blue-800">
-            Sua posição atual: <span className="font-bold">{posicaoPropria.posicao}º</span> — {posicaoPropria.pontos} pts
+          <div style={{ background: '#1E1B4B', border: '0.5px solid #4F46E5', borderRadius: 10, padding: '10px 16px', marginBottom: 14, fontSize: 13, color: '#A5B4FC' }}>
+            Sua posição atual: <span style={{ fontWeight: 700, color: '#F59E0B' }}>{posicaoPropria.posicao}º</span> — {posicaoPropria.pontos} pts
           </div>
         )}
 
         {loading ? (
-          <p className="text-center text-gray-400 py-12">Carregando...</p>
+          <p style={{ textAlign: 'center', color: '#6366F1', padding: '3rem 0' }}>Carregando...</p>
         ) : ranking.length === 0 ? (
-          <div className="rounded-2xl bg-white p-6 shadow text-center text-gray-400">
+          <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6366F1', fontSize: 14 }}>
             Nenhum aluno no ranking ainda.
           </div>
         ) : (
-          <div className="space-y-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {ranking.map((row, idx) => {
               const pos = idx + 1
               const isOwn = isAluno && row.aluno_id === userId
               return (
                 <div
                   key={row.id}
-                  className={`flex items-center gap-4 rounded-xl px-4 py-3 ${isOwn ? 'bg-blue-50 border border-blue-200' : 'bg-white shadow-sm'}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 14,
+                    borderRadius: 10, padding: '12px 16px',
+                    background: '#1E1B4B',
+                    border: isOwn ? '1px solid #4F46E5' : '0.5px solid #312E81',
+                  }}
                 >
-                  <span className="w-10 text-center text-lg font-bold">{medalha(pos)}</span>
-                  <span className="flex-1 text-sm font-medium text-gray-800 truncate">
-                    {row.profiles?.nome_completo ?? '—'}
+                  <span style={{ width: 36, textAlign: 'center', fontSize: pos <= 3 ? 20 : 13, fontWeight: 700, color: '#A5B4FC', flexShrink: 0 }}>
+                    {medalha(pos)}
                   </span>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-indigo-600">{row.pontuacao_total} pts</p>
-                    <p className="text-xs text-gray-400">
+                  <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: '#E0E7FF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {row.profiles?.nome_completo ?? '—'}
+                    {isOwn && <span style={{ marginLeft: 6, fontSize: 11, color: '#4F46E5' }}>(você)</span>}
+                  </span>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: '#F59E0B' }}>{row.pontuacao_total} pts</p>
+                    <p style={{ fontSize: 11, color: '#6366F1' }}>
                       {row.quizzes_respondidos} quiz{row.quizzes_respondidos !== 1 ? 'zes' : ''}
                     </p>
                   </div>
@@ -112,7 +117,7 @@ export const RankingPage = () => {
             })}
           </div>
         )}
-      </div>
-    </main>
+      </main>
+    </div>
   )
 }

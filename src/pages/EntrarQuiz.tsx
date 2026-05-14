@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getQuizByCodigo } from '@/services/quizService'
+import { Logo } from '@/components/Logo'
 
 export const EntrarQuiz = () => {
   const navigate = useNavigate()
@@ -28,31 +29,43 @@ export const EntrarQuiz = () => {
   }
 
   return (
-    <main className="min-h-screen w-full px-4 sm:px-6 lg:px-8 bg-gray-50 flex items-center justify-center">
-      <div className="w-full max-w-sm">
-        <div className="rounded-2xl bg-white p-8 shadow">
-          <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">Entrar no Quiz</h1>
-          <p className="text-sm text-gray-500 text-center mb-6">Digite o código de acesso fornecido pelo professor</p>
+    <main style={{ minHeight: '100vh', background: '#0F0E2A', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+      <div style={{ width: '100%', maxWidth: 380 }}>
+        <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 16, padding: '2.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.75rem' }}>
+            <Logo />
+          </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <h1 style={{ fontSize: 18, fontWeight: 700, color: '#E0E7FF', textAlign: 'center', marginBottom: 6 }}>
+            Entrar no Quiz
+          </h1>
+          <p style={{ fontSize: 13, color: '#6366F1', textAlign: 'center', marginBottom: '1.5rem' }}>
+            Digite o código fornecido pelo professor
+          </p>
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <input
               type="text"
               value={codigo}
               onChange={(e) => setCodigo(e.target.value.toUpperCase())}
-              placeholder="Ex: ABC123"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-center text-xl font-mono tracking-widest uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="EX: ABC123"
+              className="gq-input"
               maxLength={10}
               autoFocus
+              style={{ textAlign: 'center', fontSize: 20, letterSpacing: 4 }}
             />
 
             {erro && (
-              <p className="text-sm text-red-600 text-center">{erro}</p>
+              <div style={{ background: '#7F1D1D', color: '#F87171', borderRadius: 8, padding: '10px 12px', fontSize: 13, textAlign: 'center' }}>
+                {erro}
+              </div>
             )}
 
             <button
               type="submit"
               disabled={loading || !codigo.trim()}
-              className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="gq-btn-amber"
+              style={{ width: '100%' }}
             >
               {loading ? 'Buscando...' : 'Entrar'}
             </button>
