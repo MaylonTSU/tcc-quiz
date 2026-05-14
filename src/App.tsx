@@ -10,6 +10,7 @@ import { NotFound } from '@/pages/NotFound'
 import { EntrarQuiz } from '@/pages/EntrarQuiz'
 import { QuizEngine } from '@/pages/QuizEngine'
 import { ResultadoQuiz } from '@/pages/ResultadoQuiz'
+import { RankingPage } from '@/pages/RankingPage'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 
@@ -52,6 +53,7 @@ export const App = () => (
           <Route path="/entrar-quiz" element={<EntrarQuiz />} />
           <Route path="/quiz/:codigoAcesso" element={<QuizEngine />} />
           <Route path="/resultado/:tentativaId" element={<ResultadoQuiz />} />
+          <Route path="/ranking" element={<RankingPage />} />
         </Route>
 
         <Route element={<PrivateRoute allowedRoles={['professor']} />}>

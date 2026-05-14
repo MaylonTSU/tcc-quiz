@@ -155,3 +155,35 @@ export async function getTentativaById(tentativaId: string) {
   if (error) throw error
   return data
 }
+
+export type TentativaComQuiz = Tables<'tentativas'> & {
+  quizzes: { titulo: string } | null
+}
+
+export type TentativaDetalhada = Tables<'tentativas'> & {
+  profiles: { nome_completo: string } | null
+  quizzes: { titulo: string } | null
+}
+
+export async function getTentativasByAluno(alunoId: string, limit = 5): Promise<TentativaComQuiz[]> {
+  const { data, error } = await supabase
+    .from('tentativas')
+    .select('*, quizzes!tentativas_quiz_id_fkey(titulo)')
+    .eq('aluno_id', alunoId)
+    .eq('finalizada', true)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+  return data as unknown as TentativaComQuiz[]
+}
+
+export async function getTentativasRecentes(limit = 10): Promise<TentativaDetalhada[]> {
+  const { data, error } = await supabase
+    .from('tentativas')
+    .select('*, profiles!tentativas_aluno_id_fkey(nome_completo), quizzes!tentativas_quiz_id_fkey(titulo)')
+    .eq('finalizada', true)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+  return data as unknown as TentativaDetalhada[]
+}
