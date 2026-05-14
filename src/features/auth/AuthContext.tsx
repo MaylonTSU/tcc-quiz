@@ -1,20 +1,10 @@
-import { createContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/services/supabase'
 import { getProfile } from '@/services/profileService'
 import type { Profile } from '@/types/app.types'
-
-export interface AuthContextType {
-  user: User | null
-  profile: Profile | null
-  loading: boolean
-  signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string, nome: string, role: 'aluno' | 'professor') => Promise<void>
-  signOut: () => Promise<void>
-}
-
-export const AuthContext = createContext<AuthContextType | null>(null)
+import { AuthContext } from '@/features/auth/authContext'
 
 interface AuthProviderProps {
   children: ReactNode
@@ -34,9 +24,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false)
     })
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) {
         getProfile(session.user.id).then(setProfile)
