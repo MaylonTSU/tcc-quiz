@@ -77,10 +77,10 @@ export const QuizEngine = () => {
     if (!codigoAcesso || !user) return
     const iniciar = async () => {
       try {
-        const q = await getQuizByCodigo(codigoAcesso)
+        const q = await getQuizByCodigo(codigoAcesso!)
         if (!q) { navigate('/aluno/dashboard'); return }
         const [tentativa, qs] = await Promise.all([
-          iniciarTentativa(q.id, user.id),
+          iniciarTentativa(q.id, user!.id),
           getQuestoesDoQuiz(q.id),
         ])
         setQuiz(q)
