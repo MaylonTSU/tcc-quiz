@@ -180,7 +180,7 @@ export async function getTentativasByAluno(alunoId: string, limit = 5): Promise<
 export async function getTentativasRecentes(limit = 10): Promise<TentativaDetalhada[]> {
   const { data, error } = await supabase
     .from('tentativas')
-    .select('*, profiles!tentativas_aluno_id_fkey(nome_completo), quizzes!tentativas_quiz_id_fkey(titulo)')
+    .select('*, profiles(nome_completo), quizzes(titulo)')
     .eq('finalizada', true)
     .order('created_at', { ascending: false })
     .limit(limit)
