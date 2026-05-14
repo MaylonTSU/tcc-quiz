@@ -187,3 +187,76 @@ export async function getTentativasRecentes(limit = 10): Promise<TentativaDetalh
   if (error) throw error
   return data as unknown as TentativaDetalhada[]
 }
+
+export type QuestaoNoQuiz = Tables<'quiz_questoes'> & {
+  banco_questoes: BancoQuestao | null
+}
+
+export async function getQuizById(quizId: string): Promise<Quiz | null> {
+  const { data, error } = await supabase
+    .from('quizzes')
+    .select('*')
+    .eq('id', quizId)
+    .maybeSingle()
+  if (error) throw error
+  return data
+}
+
+export async function getQuestoesByQuiz(quizId: string): Promise<QuestaoNoQuiz[]> {
+  const { data, error } = await supabase
+    .from('quiz_questoes')
+    .select('*, banco_questoes(*, alternativas(*))')
+    .eq('quiz_id', quizId)
+    .order('ordem')
+  if (error) throw error
+  return data as unknown as QuestaoNoQuiz[]
+}
+
+export async function removeQuestaoDoQuiz(quizId: string, questaoId: string): Promise<void> {
+  const { error } = await supabase
+    .from('quiz_questoes')
+    .delete()
+    .eq('quiz_id', quizId)
+    .eq('questao_id', questaoId)
+  if (error) throw error
+}
+
+interface CriarQuestaoPayload {
+  disciplina_id: string
+  enunciado: string
+  nivel_dificuldade: string
+  professor_id?: string
+}
+
+export async function criarQuestao(payload: CriarQuestaoPayload): Promise<Tables<'banco_questoes'>> {
+  const { data, error } = await supabase
+    .from('banco_questoes')
+    .insert(payload)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function criarAlternativas(
+  questaoId: string,
+  alternativas: { texto: string; correta: boolean }[],
+): Promise<void> {
+  const { error } = await supabase
+    .from('alternativas')
+    .insert(alternativas.map((a) => ({ ...a, questao_id: questaoId })))
+  if (error) throw error
+}
+
+export async function updateOrdemQuestoes(quizId: string, questoesIds: string[]): Promise<void> {
+  await Promise.all(
+    questoesIds.map((questaoId, i) =>
+      supabase
+        .from('quiz_questoes')
+        .update({ ordem: i + 1 })
+        .eq('quiz_id', quizId)
+        .eq('questao_id', questaoId)
+        .then(({ error }) => { if (error) throw error }),
+    ),
+  )
+}

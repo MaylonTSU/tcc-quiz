@@ -66,6 +66,7 @@ export const DashboardProfessor = () => {
                 key={quiz.id}
                 quiz={quiz}
                 onToggleAtivo={() => toggleAtivo(quiz.id, !quiz.ativo).then(carregarQuizzes)}
+                onGerenciar={() => navigate(`/professor/quiz/${quiz.id}/gerenciar`)}
               />
             ))}
           </div>

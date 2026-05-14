@@ -11,6 +11,7 @@ import { EntrarQuiz } from '@/pages/EntrarQuiz'
 import { QuizEngine } from '@/pages/QuizEngine'
 import { ResultadoQuiz } from '@/pages/ResultadoQuiz'
 import { RankingPage } from '@/pages/RankingPage'
+import { GerenciarQuiz } from '@/pages/GerenciarQuiz'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 
@@ -56,8 +57,9 @@ export const App = () => (
           <Route path="/ranking" element={<RankingPage />} />
         </Route>
 
-        <Route element={<PrivateRoute allowedRoles={['professor']} />}>
+        <Route element={<PrivateRoute allowedRoles={['professor', 'admin']} />}>
           <Route path="/professor/dashboard" element={<DashboardProfessor />} />
+          <Route path="/professor/quiz/:quizId/gerenciar" element={<GerenciarQuiz />} />
         </Route>
 
         <Route element={<PrivateRoute allowedRoles={['admin']} />}>

@@ -6,9 +6,10 @@ interface QuizCardProps {
     quiz_questoes?: { id: string }[]
   }
   onToggleAtivo: () => Promise<void>
+  onGerenciar?: () => void
 }
 
-export const QuizCard = ({ quiz, onToggleAtivo }: QuizCardProps) => {
+export const QuizCard = ({ quiz, onToggleAtivo, onGerenciar }: QuizCardProps) => {
   const nomeDisciplina = quiz.disciplinas?.nome ?? '—'
   const totalQuestoes = quiz.quiz_questoes?.length ?? quiz.quantidade_questoes
 
@@ -20,10 +21,7 @@ export const QuizCard = ({ quiz, onToggleAtivo }: QuizCardProps) => {
           flexShrink: 0,
           background: quiz.ativo ? '#14532D' : '#312E81',
           color: quiz.ativo ? '#4ADE80' : '#6366F1',
-          borderRadius: 20,
-          padding: '2px 10px',
-          fontSize: 11,
-          fontWeight: 500,
+          borderRadius: 20, padding: '2px 10px', fontSize: 11, fontWeight: 500,
         }}>
           {quiz.ativo ? 'Ativo' : 'Inativo'}
         </span>
@@ -47,24 +45,28 @@ export const QuizCard = ({ quiz, onToggleAtivo }: QuizCardProps) => {
         </div>
       </div>
 
-      <button
-        onClick={() => onToggleAtivo()}
-        style={{
-          marginTop: 'auto',
-          width: '100%',
-          borderRadius: 8,
-          padding: '8px',
-          fontSize: 13,
-          fontWeight: 500,
-          cursor: 'pointer',
-          border: 'none',
-          transition: 'opacity 0.2s',
-          background: quiz.ativo ? '#312E81' : '#4F46E5',
-          color: quiz.ativo ? '#F87171' : '#E0E7FF',
-        }}
-      >
-        {quiz.ativo ? 'Desativar' : 'Ativar'}
-      </button>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 'auto' }}>
+        {onGerenciar && (
+          <button
+            onClick={onGerenciar}
+            className="gq-btn-primary"
+            style={{ width: '100%', padding: '7px', fontSize: 13 }}
+          >
+            Gerenciar
+          </button>
+        )}
+        <button
+          onClick={() => onToggleAtivo()}
+          style={{
+            width: '100%', borderRadius: 8, padding: '7px', fontSize: 13,
+            fontWeight: 500, cursor: 'pointer', border: 'none', transition: 'opacity 0.2s',
+            background: quiz.ativo ? '#312E81' : '#4F46E5',
+            color: quiz.ativo ? '#F87171' : '#E0E7FF',
+          }}
+        >
+          {quiz.ativo ? 'Desativar' : 'Ativar'}
+        </button>
+      </div>
     </div>
   )
 }
