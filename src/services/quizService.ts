@@ -125,3 +125,33 @@ export async function addQuestaoAoQuiz(
     .insert({ quiz_id: quizId, questao_id: questaoId, ordem })
   if (error) throw error
 }
+
+export async function getQuestoesDoQuiz(quizId: string): Promise<BancoQuestao[]> {
+  const { data, error } = await supabase
+    .from('quiz_questoes')
+    .select(`
+      ordem,
+      banco_questoes (
+        id,
+        enunciado,
+        nivel_dificuldade,
+        alternativas ( id, texto, correta )
+      )
+    `)
+    .eq('quiz_id', quizId)
+    .order('ordem')
+  if (error) throw error
+  return (data ?? [])
+    .map((row) => (row as { banco_questoes: BancoQuestao }).banco_questoes)
+    .filter(Boolean) as BancoQuestao[]
+}
+
+export async function getTentativaById(tentativaId: string) {
+  const { data, error } = await supabase
+    .from('tentativas')
+    .select('*')
+    .eq('id', tentativaId)
+    .single()
+  if (error) throw error
+  return data
+}

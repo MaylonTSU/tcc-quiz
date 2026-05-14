@@ -7,6 +7,9 @@ import { DashboardAluno } from '@/pages/DashboardAluno'
 import { DashboardProfessor } from '@/pages/DashboardProfessor'
 import { AdminPage } from '@/pages/AdminPage'
 import { NotFound } from '@/pages/NotFound'
+import { EntrarQuiz } from '@/pages/EntrarQuiz'
+import { QuizEngine } from '@/pages/QuizEngine'
+import { ResultadoQuiz } from '@/pages/ResultadoQuiz'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 
@@ -43,6 +46,12 @@ export const App = () => (
 
         <Route element={<PrivateRoute allowedRoles={['aluno']} />}>
           <Route path="/aluno/dashboard" element={<DashboardAluno />} />
+        </Route>
+
+        <Route element={<PrivateRoute allowedRoles={['aluno', 'professor', 'admin']} />}>
+          <Route path="/entrar-quiz" element={<EntrarQuiz />} />
+          <Route path="/quiz/:codigoAcesso" element={<QuizEngine />} />
+          <Route path="/resultado/:tentativaId" element={<ResultadoQuiz />} />
         </Route>
 
         <Route element={<PrivateRoute allowedRoles={['professor']} />}>
