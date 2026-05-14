@@ -29,7 +29,7 @@ export const QuizEngine = () => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const stateRef = useRef({ questaoIdx, questoes, tentativaId, quiz })
 
-  const avancar = useCallback(async (alternativaId: string | null) => {
+  const avancar = useCallback(async (alternativaId: string | null, tempoResposta: number | null = null) => {
     if (bloqueadoRef.current) return
     bloqueadoRef.current = true
 
@@ -43,7 +43,7 @@ export const QuizEngine = () => {
 
     if (alternativaId && questao && tid) {
       try {
-        await registrarResposta({ tentativaId: tid, questaoId: questao.id, alternativaId })
+        await registrarResposta({ tentativaId: tid, questaoId: questao.id, alternativaId, tempoResposta: tempoResposta ?? 0 })
       } catch { /* pontuação é server-side; fluxo continua */ }
     }
 
@@ -117,7 +117,7 @@ export const QuizEngine = () => {
     if (bloqueadoRef.current || mostrarFeedback) return
     setRespostaSelecionada(altId)
     setMostrarFeedback(true)
-    setTimeout(() => avancarRef.current(altId), 1000)
+    setTimeout(() => avancarRef.current(altId, tempoRestante), 1000)
   }
 
   if (loading || !quiz || questoes.length === 0) {
