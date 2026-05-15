@@ -11,10 +11,10 @@ export type BancoQuestao = Tables<'banco_questoes'> & {
 export async function listQuizzes(): Promise<Quiz[]> {
   const { data, error } = await supabase
     .from('quizzes')
-    .select('*')
+    .select('*, disciplinas(nome), quiz_questoes(count)')
     .order('created_at', { ascending: false })
   if (error) throw error
-  return data
+  return data as unknown as Quiz[]
 }
 
 export async function createQuiz(payload: TablesInsert<'quizzes'>): Promise<Quiz> {

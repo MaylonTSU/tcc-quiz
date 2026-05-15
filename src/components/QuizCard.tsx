@@ -11,7 +11,7 @@ interface QuizCardProps {
 
 export const QuizCard = ({ quiz, onToggleAtivo, onGerenciar }: QuizCardProps) => {
   const nomeDisciplina = quiz.disciplinas?.nome ?? '—'
-  const totalQuestoes = quiz.quiz_questoes?.length ?? quiz.quantidade_questoes
+  const totalQuestoes = (quiz as any).quiz_questoes?.[0]?.count ?? quiz.quantidade_questoes
 
   return (
     <div style={{ background: '#1E1B4B', border: '0.5px solid #312E81', borderRadius: 12, padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: 12 }}>
