@@ -142,7 +142,7 @@ export async function getQuestoesDoQuiz(quizId: string): Promise<BancoQuestao[]>
     .order('ordem')
   if (error) throw error
   return (data ?? [])
-    .map((row) => (row as { banco_questoes: BancoQuestao }).banco_questoes)
+    .map((row) => (row as unknown as { banco_questoes: BancoQuestao }).banco_questoes)
     .filter(Boolean) as BancoQuestao[]
 }
 

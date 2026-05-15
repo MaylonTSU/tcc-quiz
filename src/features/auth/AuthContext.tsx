@@ -1,10 +1,21 @@
-import { useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/services/supabase'
 import { getProfile } from '@/services/profileService'
 import type { Profile } from '@/types/app.types'
-import { AuthContext } from '@/features/auth/authContext'
+
+export interface AuthContextType {
+  user: User | null
+  profile: Profile | null
+  loading: boolean
+  signIn: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string, nome: string, role: 'aluno' | 'professor') => Promise<void>
+  signOut: () => Promise<void>
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext<AuthContextType | null>(null)
 
 interface AuthProviderProps {
   children: ReactNode
