@@ -12,6 +12,7 @@ import { QuizEngine } from '@/pages/QuizEngine'
 import { ResultadoQuiz } from '@/pages/ResultadoQuiz'
 import { RankingPage } from '@/pages/RankingPage'
 import { GerenciarQuiz } from '@/pages/GerenciarQuiz'
+import { InstallPWA } from '@/components/InstallPWA'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 
@@ -39,6 +40,7 @@ const NaoAutorizado = () => (
 
 export const App = () => (
   <BrowserRouter>
+    <InstallPWA />
     <AuthProvider>
       <Routes>
         <Route path="/" element={<HomeRedirect />} />

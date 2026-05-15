@@ -1,0 +1,15 @@
+{
+  "name": "GameQuiz",
+  "short_name": "GameQuiz",
+  "description": "Quiz educacional gamificado para faculdade",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F0E2A",
+  "theme_color": "#1E1B4B",
+  "orientation": "portrait-primary",
+  "categories": ["education", "games"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
