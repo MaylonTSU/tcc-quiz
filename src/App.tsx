@@ -29,11 +29,13 @@ const HomeRedirect = () => {
 }
 
 const NaoAutorizado = () => (
-  <main className="min-h-screen w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-gray-50">
-    <div className="mx-auto w-full max-w-6xl text-center">
-      <p className="text-6xl font-bold text-gray-200">403</p>
-      <h1 className="mt-4 text-2xl font-bold text-gray-800">Acesso negado</h1>
-      <p className="mt-2 text-gray-500">Você não tem permissão para acessar esta página.</p>
+  <main style={{ minHeight: '100vh', background: '#0F0E2A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ textAlign: 'center' }}>
+      <p style={{ fontSize: 80, fontWeight: 700, color: '#4F46E5', lineHeight: 1 }}>403</p>
+      <h1 style={{ fontSize: 22, fontWeight: 700, color: '#E0E7FF', marginTop: 12 }}>Acesso negado</h1>
+      <p style={{ fontSize: 14, color: '#6366F1', marginTop: 8 }}>
+        Você não tem permissão para acessar esta página.
+      </p>
     </div>
   </main>
 )

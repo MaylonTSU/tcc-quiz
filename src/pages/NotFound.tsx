@@ -1,14 +1,22 @@
 import { Link } from 'react-router-dom'
 
 export const NotFound = () => (
-  <main className="min-h-screen w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-gray-50">
-    <div className="mx-auto w-full max-w-6xl text-center">
-      <p className="text-6xl font-bold text-gray-200">404</p>
-      <h1 className="mt-4 text-2xl font-bold text-gray-800">Página não encontrada</h1>
-      <p className="mt-2 text-gray-500">O endereço que você acessou não existe.</p>
+  <main style={{ minHeight: '100vh', background: '#0F0E2A', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 16px' }}>
+    <div style={{ textAlign: 'center' }}>
+      <p style={{ fontSize: 14, fontWeight: 700, letterSpacing: 3, color: '#6366F1', textTransform: 'uppercase', marginBottom: 24 }}>
+        GAMEQUIZ
+      </p>
+      <p style={{ fontSize: 96, fontWeight: 800, color: '#4F46E5', lineHeight: 1, margin: 0 }}>404</p>
+      <h1 style={{ fontSize: 22, fontWeight: 700, color: '#E0E7FF', marginTop: 16 }}>
+        Página não encontrada
+      </h1>
+      <p style={{ fontSize: 14, color: '#6366F1', marginTop: 8 }}>
+        Esta página não existe ou foi removida.
+      </p>
       <Link
         to="/"
-        className="mt-6 inline-block rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+        className="gq-btn-primary"
+        style={{ display: 'inline-block', marginTop: 32 }}
       >
         Voltar ao início
       </Link>
