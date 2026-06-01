@@ -14,6 +14,7 @@ interface FormState {
   disciplina_id: string
   codigo_acesso: string
   tempo_limite_segundos: number
+  liberar_gabarito: boolean
 }
 
 const gerarCodigoAleatorio = () =>
@@ -27,6 +28,7 @@ export const CriarQuizModal = ({ onClose, onCreated }: CriarQuizModalProps) => {
     disciplina_id: '',
     codigo_acesso: gerarCodigoAleatorio(),
     tempo_limite_segundos: 30,
+    liberar_gabarito: false,
   })
   const [erro, setErro] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -45,6 +47,7 @@ export const CriarQuizModal = ({ onClose, onCreated }: CriarQuizModalProps) => {
         ...form,
         professor_id: user.id,
         tipo_criacao: 'manual',
+        liberar_gabarito: form.liberar_gabarito,
       })
       onCreated()
     } catch (err) {
@@ -124,6 +127,19 @@ export const CriarQuizModal = ({ onClose, onCreated }: CriarQuizModalProps) => {
                 Gerar
               </button>
             </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <input
+              type="checkbox"
+              id="liberar_gabarito"
+              checked={form.liberar_gabarito}
+              onChange={(e) => setForm((prev) => ({ ...prev, liberar_gabarito: e.target.checked }))}
+              style={{ width: 16, height: 16, accentColor: '#4F46E5', cursor: 'pointer' }}
+            />
+            <label htmlFor="liberar_gabarito" style={{ fontSize: 13, color: '#A5B4FC', cursor: 'pointer' }}>
+              Liberar gabarito para alunos após o quiz
+            </label>
           </div>
 
           {erro && (

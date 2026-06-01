@@ -200,6 +200,7 @@ export type Database = {
           created_at: string
           disciplina_id: string
           id: string
+          liberar_gabarito: boolean | null
           professor_id: string
           quantidade_questoes: number
           tempo_limite_segundos: number | null
@@ -213,6 +214,7 @@ export type Database = {
           created_at?: string
           disciplina_id: string
           id?: string
+          liberar_gabarito?: boolean | null
           professor_id: string
           quantidade_questoes?: number
           tempo_limite_segundos?: number | null
@@ -226,6 +228,7 @@ export type Database = {
           created_at?: string
           disciplina_id?: string
           id?: string
+          liberar_gabarito?: boolean | null
           professor_id?: string
           quantidade_questoes?: number
           tempo_limite_segundos?: number | null

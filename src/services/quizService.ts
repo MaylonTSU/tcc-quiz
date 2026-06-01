@@ -226,6 +226,7 @@ interface CriarQuestaoPayload {
   enunciado: string
   nivel_dificuldade: string
   professor_id?: string
+  explicacao?: string | null
 }
 
 export async function criarQuestao(payload: CriarQuestaoPayload): Promise<Tables<'banco_questoes'>> {

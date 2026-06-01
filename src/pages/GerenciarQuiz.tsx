@@ -65,6 +65,7 @@ export const GerenciarQuiz = () => {
   const [novaDificuldade, setNovaDificuldade] = useState<Dificuldade>('medio')
   const [alts, setAlts] = useState(['', '', '', ''])
   const [correta, setCorreta] = useState(0)
+  const [novaExplicacao, setNovaExplicacao] = useState('')
   const [criando, setCriando] = useState(false)
   const [erroForm, setErroForm] = useState('')
 
@@ -141,11 +142,13 @@ export const GerenciarQuiz = () => {
         enunciado: novoEnunciado,
         nivel_dificuldade: novaDificuldade,
         professor_id: user.id,
+        explicacao: novaExplicacao || null,
       })
       await criarAlternativas(questao.id, alts.map((texto, i) => ({ texto, correta: i === correta })))
       await addQuestaoAoQuiz(quizId, questao.id, questoesNoQuiz.length + 1)
       await carregarQuestoes()
       setNovoEnunciado('')
+      setNovaExplicacao('')
       setAlts(['', '', '', ''])
       setCorreta(0)
     } catch (err) {
@@ -295,6 +298,18 @@ export const GerenciarQuiz = () => {
                 value={novoEnunciado}
                 onChange={(e) => setNovoEnunciado(e.target.value)}
                 rows={3}
+                className="gq-input"
+                style={{ ...inputOverride, resize: 'vertical' }}
+              />
+            </div>
+
+            <div>
+              <label style={labelStyle}>Explicação da resposta (opcional)</label>
+              <textarea
+                value={novaExplicacao}
+                onChange={(e) => setNovaExplicacao(e.target.value)}
+                rows={2}
+                placeholder="Ex: O desenvolvimento sustentável busca equilibrar crescimento econômico com preservação ambiental..."
                 className="gq-input"
                 style={{ ...inputOverride, resize: 'vertical' }}
               />

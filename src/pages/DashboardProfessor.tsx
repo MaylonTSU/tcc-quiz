@@ -10,6 +10,7 @@ import {
 import type { Quiz } from '@/services/quizService'
 import { QuizCard } from '@/components/QuizCard'
 import { CriarQuizModal } from '@/components/CriarQuizModal'
+import { AnaliseTentativaModal } from '@/components/AnaliseTentativaModal'
 import { Logo } from '@/components/Logo'
 
 export const DashboardProfessor = () => {
@@ -18,6 +19,11 @@ export const DashboardProfessor = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([])
   const [tentativas, setTentativas] = useState<TentativaDetalhada[]>([])
   const [showModal, setShowModal] = useState(false)
+  const [tentativaSelecionada, setTentativaSelecionada] = useState<{
+    id: string
+    nomeAluno: string
+    pontuacao: number
+  } | null>(null)
 
   const carregarQuizzes = () => {
     listQuizzes().then(setQuizzes).catch(() => {})
@@ -91,7 +97,7 @@ export const DashboardProfessor = () => {
               <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '0.5px solid #312E81' }}>
-                    {['Aluno', 'Quiz', 'Pontos', 'Data'].map((h) => (
+                    {['Aluno', 'Quiz', 'Pontos', 'Data', 'Detalhes'].map((h) => (
                       <th key={h} style={{ padding: '6px 8px', color: '#6366F1', fontWeight: 500, textAlign: h === 'Pontos' || h === 'Data' ? 'right' : 'left', fontSize: 11 }}>{h}</th>
                     ))}
                   </tr>
@@ -103,6 +109,19 @@ export const DashboardProfessor = () => {
                       <td style={{ padding: '8px', color: '#A5B4FC', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.quizzes?.titulo ?? '—'}</td>
                       <td style={{ padding: '8px', textAlign: 'right', fontWeight: 700, color: '#F59E0B' }}>{t.pontuacao_total}</td>
                       <td style={{ padding: '8px', textAlign: 'right', color: '#6366F1' }}>{formatarData(t.created_at)}</td>
+                      <td style={{ padding: '8px' }}>
+                        <button
+                          onClick={() => setTentativaSelecionada({
+                            id: t.id,
+                            nomeAluno: t.profiles?.nome_completo ?? '—',
+                            pontuacao: t.pontuacao_total,
+                          })}
+                          className="gq-btn-ghost"
+                          style={{ padding: '4px 10px', fontSize: 12 }}
+                        >
+                          Ver detalhes
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -111,6 +130,15 @@ export const DashboardProfessor = () => {
           )}
         </div>
       </main>
+
+      {tentativaSelecionada && (
+        <AnaliseTentativaModal
+          tentativaId={tentativaSelecionada.id}
+          nomeAluno={tentativaSelecionada.nomeAluno}
+          pontuacaoTotal={tentativaSelecionada.pontuacao}
+          onClose={() => setTentativaSelecionada(null)}
+        />
+      )}
 
       {showModal && (
         <CriarQuizModal
